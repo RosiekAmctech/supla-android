@@ -18,6 +18,7 @@ package org.supla.android.cfg
  */
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import org.supla.android.PreloaderPopup
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.profile.ProfileIdNew
@@ -47,6 +49,7 @@ class ProfilesFragment: Fragment() {
     private val viewModel: CfgViewModel by activityViewModels()
     private val profilesVM: ProfilesViewModel by viewModels()
     private lateinit var binding: FragmentProfilesBinding
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,9 +75,16 @@ class ProfilesFragment: Fragment() {
 
     private fun openEditProfileView(profileId: Long) {
         val navId = if(profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
-        val args = AuthFragmentArgs(profileId, true, false)
-        navCoordinator.wantsBack = true
-        findNavController().navigate(navId, args.toBundle())
+
+        if (profileId == ProfileIdNew && profilesVM.profilesAdapter.itemCount  == 3){
+
+
+        }
+        else {
+            val args = AuthFragmentArgs(profileId, true, false)
+            navCoordinator.wantsBack = true
+            findNavController().navigate(navId, args.toBundle())
+        }
     }
 
     override fun onCreateView(
@@ -99,5 +109,9 @@ class ProfilesFragment: Fragment() {
 
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
         return ProfilesViewModelFactory()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
     }
 }

@@ -819,7 +819,8 @@ public class DbHelper extends BaseDbHelper {
     }
 
     public boolean isZWaveBridgeChannelAvailable() {
-        return channelRepository.isZWaveBridgeChannelAvailable();
+        //return channelRepository.isZWaveBridgeChannelAvailable();
+        return true;
     }
 
     public List<Channel> getZWaveBridgeChannels() {
