@@ -17,6 +17,7 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -26,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -43,6 +45,19 @@ import org.supla.android.SuplaApp
 import org.supla.android.profile.ProfileIdNew
 import org.supla.android.databinding.FragmentCfgBinding
 import org.supla.android.databinding.FragmentProfilesBinding
+
+class FragmentPopup : DialogFragment() {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+            AlertDialog.Builder(requireContext())
+                    .setMessage("You cannot add more than 3 accounts")
+                    .setTitle("Stop")
+                    .setPositiveButton(getString(R.string.ok)) { _,_ -> }
+                    .create()
+
+    companion object {
+        const val TAG = "CustomPopup"
+    }
+}
 
 class ProfilesFragment: Fragment() {
     private val navCoordinator: NavCoordinator by activityViewModels()
@@ -76,9 +91,8 @@ class ProfilesFragment: Fragment() {
     private fun openEditProfileView(profileId: Long) {
         val navId = if(profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
 
-        if (profileId == ProfileIdNew && profilesVM.profilesAdapter.itemCount  == 3){
-
-
+        if (profileId == ProfileIdNew && profilesVM.profilesAdapter.itemCount  == 4){
+            FragmentPopup().show(childFragmentManager, FragmentPopup.TAG)
         }
         else {
             val args = AuthFragmentArgs(profileId, true, false)
